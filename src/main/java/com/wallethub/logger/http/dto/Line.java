@@ -1,18 +1,20 @@
 package com.wallethub.logger.http.dto;
 
+import jdk.nashorn.internal.runtime.options.Option;
+
 import java.util.Date;
+import java.util.Optional;
 
 public class Line {
-   private Date date;
-   private String ip;
-   private String request;
-   private String status;
-   private String userAgent;
+    private Optional<String> id;
+    private Date date;
+    private String ip;
+    private String request;
+    private String status;
+    private String userAgent;
 
-    public Line() {
-    }
-
-    public Line(Date date, String ip, String request, String status, String userAgent) {
+    public Line(Optional<String> id, Date date, String ip, String request, String status, String userAgent) {
+        this.id = id;
         this.date = date;
         this.ip = ip;
         this.request = request;
@@ -20,8 +22,12 @@ public class Line {
         this.userAgent = userAgent;
     }
 
-    public Line(Object token) {
-        int a =0;
+    public Optional<String> getId() {
+        return id;
+    }
+
+    public void setId(Optional<String> id) {
+        this.id = id;
     }
 
     public Date getDate() {
