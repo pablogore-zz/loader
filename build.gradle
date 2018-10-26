@@ -1,6 +1,7 @@
 buildscript {
     dependencies {
         classpath 'com.h2database:h2:1.4.191'
+        classpath 'mysql:mysql-connector-java:8.0.13'
     }
 }
 plugins{
@@ -18,9 +19,12 @@ repositories {
     mavenCentral()
 }
 
+
 flyway {
-    url = 'jdbc:h2:file:./target/foobar'
-    user = 'sa'
+    url = 'jdbc:mysql://localhost:3306'
+    user = 'loader'
+    password = 'loader'
+    schemas = ['loaderdb']
 }
 
 task fatJar(type: Jar) {
