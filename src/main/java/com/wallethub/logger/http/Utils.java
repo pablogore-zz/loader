@@ -1,5 +1,6 @@
 package com.wallethub.logger.http;
 
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,11 @@ public class Utils {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
         formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
         return formatter.parse(str);
+    }
+
+
+    public static Connection getConnection(){
+        return null;
     }
 }
 
