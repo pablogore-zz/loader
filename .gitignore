@@ -19,6 +19,8 @@ buildNumber.properties
 ./idea
 vcs.xml
 Project.xml
+data
+
 # Ignore Gradle GUI config
 gradle-app.setting
 

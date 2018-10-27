@@ -10,12 +10,12 @@ public interface LoaderDAO {
      * Store values into the database
      * @param lines
      *          list of value lines to be perform
-     * @param commitNumber
-     *          number of rows after commit the transaction
      * @return
      *      number of rows inserted
      */
-    public int save(List<Line> lines, Integer commitNumber) throws SQLException;
+    public int save(List<Line> lines) throws SQLException;
 
     public int getCount() throws SQLException;
+
+    public void clean() throws Exception;
 }

@@ -11,6 +11,7 @@ public class Arguments{
     private String duration;
     private String threshold;
     private String accessLog;
+    private boolean clean;
     private boolean help;
 
     @Option
@@ -53,6 +54,14 @@ public class Arguments{
         this.threshold = threshold;
     }
 
+    @Option
+    @LongSwitch("clean")
+    @ShortSwitch("c")
+    @Toggle(true)
+    public void setClean(boolean clean) {
+        this.clean = clean;
+    }
+
     public String getAccessLog() {
         return accessLog;
     }
@@ -73,6 +82,10 @@ public class Arguments{
         return help;
     }
 
+    public boolean isClean() {
+        return clean;
+    }
+
     public void usage() {
         System.out.println("\n" +
                 "Usage: ./draw_call_graph.sh -c classpath [-p <package1>:<package2>] [-o <output.dot>] <method1> [<method2>]\n" +
@@ -80,6 +93,7 @@ public class Arguments{
                 "\t-s --startDate \t\t start date under analysis\n" +
                 "\t-d --duration \t\t duration to be included, optional, dayly | hourly\n" +
                 "\t-t --threshold \t\t threshold\n" +
+                "\t-c --clean \t\t clean db\n" +
                 "\n\n");
     }
 }

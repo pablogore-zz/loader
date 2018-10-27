@@ -19,19 +19,24 @@ public class LoaderDAOImpl implements LoaderDAO {
     }
 
     @Override
-    public int save(List<Line> lines, Integer commitNumber) throws SQLException {
+    public int save(List<Line> lines) throws SQLException {
 
         int countLines = 0;
+        long start = System.currentTimeMillis();
+
+        final int batchSize = 1000;
+
         for (Line line : lines) {
             ps.setString(1, line.getId().get());
-            ps.setDate(2, new Date(line.getDate().getTime()));
+            ps.setTimestamp(2, new Timestamp(line.getDate().getTime()));
             ps.setString(3, line.getIp());
             ps.setString(4, line.getRequest());
             ps.setString(5, line.getStatus());
             ps.setString(6, line.getUserAgent());
+            ps.addBatch();
 
-            if (++countLines % commitNumber == 0) {
-                ps.addBatch();
+            if(++countLines % batchSize == 0) {
+                ps.executeBatch();
                 System.out.println("INSERTING ....." + countLines);
             }
         }
@@ -49,6 +54,25 @@ public class LoaderDAOImpl implements LoaderDAO {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("select count(*) as total from access_logger");
         if(rs.first()) return rs.getInt("total");
+
         return 0;
+    }
+
+    @Override
+    public void clean() throws Exception {
+        String sql = "delete from access_logger ";
+
+        Connection connection = Utils.getConnection();
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+
+        Statement stmt = connection.createStatement();
+        int deleted = stmt.executeUpdate(sql);
+        if(deleted==0){
+            System.out.println("Deleted All Rows In The Table Successfully...");
+        }else{
+            System.out.println("Table already empty.");
+        }
+        connection.close();
     }
 }

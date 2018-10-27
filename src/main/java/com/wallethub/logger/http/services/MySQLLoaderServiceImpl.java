@@ -25,7 +25,7 @@ public class MySQLLoaderServiceImpl implements Loader {
                 .filter(line-> line!=null)
                 .collect(toList());
 
-        int totalRows = new LoaderDAOImpl().save(lines,1000);
+        int totalRows = new LoaderDAOImpl().save(lines);
         System.out.println("TOTAL=" + totalRows);
         System.out.println("TOTAL FROM * =" + new LoaderDAOImpl().getCount());
     }
