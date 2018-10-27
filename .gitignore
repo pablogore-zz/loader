@@ -15,7 +15,10 @@ buildNumber.properties
 ### Gradle template
 .gradle
 /build/
-
+.idea
+./idea
+vcs.xml
+Project.xml
 # Ignore Gradle GUI config
 gradle-app.setting
 

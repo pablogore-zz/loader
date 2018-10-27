@@ -76,6 +76,7 @@ public class Arguments{
     public void usage() {
         System.out.println("\n" +
                 "Usage: ./draw_call_graph.sh -c classpath [-p <package1>:<package2>] [-o <output.dot>] <method1> [<method2>]\n" +
+                "\t-a --accesslog \t\t accesslog file\n" +
                 "\t-s --startDate \t\t start date under analysis\n" +
                 "\t-d --duration \t\t duration to be included, optional, dayly | hourly\n" +
                 "\t-t --threshold \t\t threshold\n" +

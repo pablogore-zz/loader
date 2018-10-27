@@ -1,26 +1,21 @@
 package com.wallethub.logger.http.dao;
 
 import com.mysql.cj.jdbc.CallableStatement;
+import com.wallethub.logger.http.Utils;
 import com.wallethub.logger.http.dto.Line;
 
 import java.sql.*;
 import java.util.List;
 
 public class LoaderDAOImpl implements LoaderDAO {
-    String sql = "insert into access_logger (ID, DATE, IP,REQUEST,STATUS,USER_AGENT) values (?, ?, ?, ?, ?, ?)";
+    String sql = "insert into access_logger (ID, OP_DATE, IP,REQUEST,STATUS,USER_AGENT) values (?, ?, ?, ?, ?, ?)";
 
-    Connection connection = getConnection();
-
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName ("org.h2.Driver");
-        Connection conn = DriverManager.getConnection ("jdbc:h2:./target/foobar", "sa","");
-        return  conn;
-    }
+    Connection connection = Utils.getConnection();
 
     PreparedStatement ps = connection.prepareStatement(sql);
 
 
-    public LoaderDAOImpl() throws SQLException, ClassNotFoundException {
+    public LoaderDAOImpl() throws Exception {
     }
 
     @Override
@@ -36,13 +31,14 @@ public class LoaderDAOImpl implements LoaderDAO {
             ps.setString(6, line.getUserAgent());
 
             if (++countLines % commitNumber == 0) {
-                ps.executeBatch();
-                System.out.println("INSRTANDO ....." + countLines);
+                ps.addBatch();
+                System.out.println("INSERTING ....." + countLines);
             }
         }
 
         ps.executeBatch(); // insert remaining records
         ps.close();
+        connection.commit();
         connection.close();
 
         return countLines;

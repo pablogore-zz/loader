@@ -1,6 +1,7 @@
 package com.wallethub.logger.http;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,8 +28,12 @@ public class Utils {
     }
 
 
-    public static Connection getConnection(){
-        return null;
+    public static Connection getConnection() throws Exception{
+        Class.forName("com.mysql.jdbc.Driver");
+        String connection = "jdbc:mysql://localhost:3306/loaderdb";
+        Connection conn = DriverManager.getConnection(connection, "loader", "loader");
+        conn.setAutoCommit(false);
+        return conn;
     }
 }
 

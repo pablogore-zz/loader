@@ -11,5 +11,5 @@ public interface Loader {
      * Parse log file and  store into MySQL
      * @param file
      */
-    public void logLoader(String file) throws IOException, SQLException, ClassNotFoundException;
+    public void logLoader(String file) throws Exception;
 }

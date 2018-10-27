@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 
 public class MySQLLoaderServiceImpl implements Loader {
     @Override
-    public void logLoader(String file) throws IOException, SQLException, ClassNotFoundException {
+    public void logLoader(String file) throws Exception {
         List<Line> lines = Files.lines(Paths.get(file))
                 .map(line -> new StringTokenizer(line, "|"))
                 .map(t-> buildLine(t))
