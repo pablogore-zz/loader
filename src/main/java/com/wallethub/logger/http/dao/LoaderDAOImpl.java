@@ -50,15 +50,6 @@ public class LoaderDAOImpl implements LoaderDAO {
     }
 
     @Override
-    public int getCount() throws SQLException {
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("select count(*) as total from access_logger");
-        if(rs.first()) return rs.getInt("total");
-
-        return 0;
-    }
-
-    @Override
     public void clean() throws Exception {
         String sql = "delete from access_logger ";
 

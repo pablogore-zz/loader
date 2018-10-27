@@ -15,7 +15,5 @@ public interface LoaderDAO {
      */
     public int save(List<Line> lines) throws SQLException;
 
-    public int getCount() throws SQLException;
-
     public void clean() throws Exception;
 }
