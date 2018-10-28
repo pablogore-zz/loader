@@ -21,11 +21,37 @@ public class Utils {
      * @return
      * @throws ParseException
      */
-    public static Date getDate(String str) throws ParseException {
+
+    public static Date getDate(String str) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss", Locale.ENGLISH);
+        formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+        try {
+            return formatter.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Date getDateSSS(String str) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
         formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
-        return formatter.parse(str);
+        try {
+            return formatter.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+
+    public static String getDatToString(Date current) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
+        formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+        return formatter.format(current);
+    }
+
+
 
 
     public static Connection getConnection() throws Exception{

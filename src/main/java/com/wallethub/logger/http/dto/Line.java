@@ -6,28 +6,18 @@ import java.util.Date;
 import java.util.Optional;
 
 public class Line {
-    private Optional<String> id;
     private Date date;
     private String ip;
     private String request;
     private String status;
     private String userAgent;
 
-    public Line(Optional<String> id, Date date, String ip, String request, String status, String userAgent) {
-        this.id = id;
+    public Line(Date date, String ip, String request, String status, String userAgent) {
         this.date = date;
         this.ip = ip;
         this.request = request;
         this.status = status;
         this.userAgent = userAgent;
-    }
-
-    public Optional<String> getId() {
-        return id;
-    }
-
-    public void setId(Optional<String> id) {
-        this.id = id;
     }
 
     public Date getDate() {

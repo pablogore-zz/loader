@@ -13,7 +13,13 @@ public interface LoaderDAO {
      * @return
      *      number of rows inserted
      */
-    public int save(List<Line> lines) throws SQLException;
+    int save(List<Line> lines) throws Exception;
 
-    public void clean() throws Exception;
+    /**
+     * Clean db
+     * @throws Exception
+     */
+    void clean() throws Exception;
+
+    int report(String startDate,String duration,String threshold) throws Exception;
 }

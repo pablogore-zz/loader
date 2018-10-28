@@ -1,5 +1,6 @@
 package com.wallethub.logger.http.services;
 
+import com.wallethub.logger.http.Arguments;
 import com.wallethub.logger.http.Utils;
 import com.wallethub.logger.http.dao.LoaderDAOImpl;
 import com.wallethub.logger.http.dto.Line;
@@ -27,16 +28,16 @@ public class MySQLLoaderServiceImpl implements Loader {
 
         int totalRows = new LoaderDAOImpl().save(lines);
         System.out.println("TOTAL=" + totalRows);
-        System.out.println("TOTAL FROM * =" + new LoaderDAOImpl().getCount());
+    }
+
+    @Override
+    public void report(Arguments arguments) throws Exception {
+        int totalRows = new LoaderDAOImpl().report(arguments.getStartDate(),arguments.getDuration(),arguments.getThreshold());
+        System.out.println("TOTAL=" + totalRows);
     }
 
 
     private Line buildLine(StringTokenizer t){
-        try {
-            return new Line(Optional.of(UUID.randomUUID().toString()),Utils.getDate(t.nextToken()), t.nextToken(), t.nextToken(), t.nextToken(), t.nextToken());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new Line(Utils.getDateSSS(t.nextToken()), t.nextToken(), t.nextToken(), t.nextToken(), t.nextToken());
     }
 }

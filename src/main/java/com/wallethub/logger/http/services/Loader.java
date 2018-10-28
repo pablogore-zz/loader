@@ -1,5 +1,7 @@
 package com.wallethub.logger.http.services;
 
+import com.wallethub.logger.http.Arguments;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -11,5 +13,12 @@ public interface Loader {
      * Parse log file and  store into MySQL
      * @param file
      */
-    public void logLoader(String file) throws Exception;
+    void logLoader(String file) throws Exception;
+
+    /**
+     * Parse log file and  store into MySQL
+     * @param arguments
+     */
+    void report(Arguments arguments) throws Exception;
+
 }

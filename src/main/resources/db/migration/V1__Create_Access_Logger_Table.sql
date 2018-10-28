@@ -1,5 +1,4 @@
 create table access_logger(
-    ID varchar(50) not null PRIMARY KEY,
     OP_DATE TIMESTAMP not null,
     IP varchar(50) not null,
     REQUEST varchar(50) not null,

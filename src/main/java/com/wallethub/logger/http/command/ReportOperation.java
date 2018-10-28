@@ -4,11 +4,11 @@ import com.wallethub.logger.http.Arguments;
 import com.wallethub.logger.http.services.Loader;
 import com.wallethub.logger.http.services.MySQLLoaderServiceImpl;
 
-public class SaveOperation implements Command {
+public class ReportOperation implements Command {
 
     private final Arguments arguments;
 
-    public SaveOperation(Arguments arguments) {
+    public ReportOperation(Arguments arguments) {
         this.arguments = arguments;
     }
 
@@ -19,7 +19,7 @@ public class SaveOperation implements Command {
         Loader loader = new MySQLLoaderServiceImpl();
 
         try {
-            loader.logLoader(arguments.getAccessLog());
+            loader.report(arguments);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);

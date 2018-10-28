@@ -2,9 +2,7 @@ package com.wallethub.logger.http;
 
 import com.github.jankroken.commandline.CommandLineParser;
 import com.github.jankroken.commandline.OptionStyle;
-import com.wallethub.logger.http.command.CleanOperation;
-import com.wallethub.logger.http.command.SaveOperation;
-import com.wallethub.logger.http.command.UsageOperation;
+import com.wallethub.logger.http.command.*;
 import com.wallethub.logger.http.services.MySQLLoaderServiceImpl;
 import com.wallethub.logger.http.services.Loader;
 
@@ -23,19 +21,20 @@ public class Parser {
 
         OperationExecutor executor = new OperationExecutor();
         if (options.isHelp()){
-            UsageOperation usage = new UsageOperation(options);
-            usage.execute();
+            Command command = new UsageOperation(options);
+            command.execute();
             return;
         }else if (options.isClean()){
             CleanOperation clean = new CleanOperation();
             clean.execute();
-        }else if(options.getAccessLog()!=null || options.getAccessLog().length()!=0){
-            SaveOperation save = new SaveOperation(options);
-            save.execute();
+        }else if(options.getAccessLog()!=null){
+            Command command = new SaveOperation(options);
+            command.execute();
         }else if(!"".equals(options.getStartDate()) && !"".equals(options.getDuration())
                 && !"".equals(options.getThreshold())   ){
 
-
+            Command command = new ReportOperation(options);
+            command.execute();
         }
     }
 
