@@ -21,5 +21,22 @@ public interface LoaderDAO {
      */
     void clean() throws Exception;
 
+    /**
+     *
+     * @param startDate
+     * @param duration
+     * @param threshold
+     * @return
+     * @throws Exception
+     */
     int report(String startDate,String duration,String threshold) throws Exception;
+
+    /**
+     *
+     * @param ip
+     * @return
+     * @throws Exception
+     */
+    List<Line> report(String ip) throws Exception;
+
 }

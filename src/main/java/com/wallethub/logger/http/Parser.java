@@ -30,10 +30,13 @@ public class Parser {
         }else if(options.getAccessLog()!=null){
             Command command = new SaveOperation(options);
             command.execute();
-        }else if(!"".equals(options.getStartDate()) && !"".equals(options.getDuration())
-                && !"".equals(options.getThreshold())   ){
+        }else if(options.getStartDate()!=null && options.getDuration()!=null
+                && options.getThreshold()!=null) {
 
             Command command = new ReportOperation(options);
+            command.execute();
+        }else if (!"".equals(options.getIp())){
+            Command command = new IPReportOperation(options);
             command.execute();
         }
     }

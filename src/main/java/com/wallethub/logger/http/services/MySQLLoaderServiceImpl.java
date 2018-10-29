@@ -36,6 +36,11 @@ public class MySQLLoaderServiceImpl implements Loader {
         System.out.println("TOTAL=" + totalRows);
     }
 
+    @Override
+    public List<Line> filterByIP(Arguments arguments) throws Exception {
+       return new LoaderDAOImpl().report(arguments.getIp());
+    }
+
 
     private Line buildLine(StringTokenizer t){
         return new Line(Utils.getDateSSS(t.nextToken()), t.nextToken(), t.nextToken(), t.nextToken(), t.nextToken());

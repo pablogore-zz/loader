@@ -3,10 +3,8 @@ package com.wallethub.logger.http.dao;
 import com.wallethub.logger.http.Utils;
 import com.wallethub.logger.http.dto.Line;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -83,6 +81,29 @@ public class LoaderDAOImpl implements LoaderDAO {
         return rows;
     }
 
+    @Override
+    public List<Line> report(String ip) throws Exception {
+        String sql = String.format(" SELECT IP ,STATUS ,REQUEST , USER_AGENT FROM access_logger WHERE IP='%s'", ip);
+
+        Connection connection = Utils.getConnection();
+
+        Statement stmt = connection.createStatement();
+
+        ResultSet rows = stmt.executeQuery(sql);
+
+        List<Line> list  = new ArrayList<>();
+
+        while (rows.next()){
+
+            Line line = new Line(new Date(rows.getTimestamp("OP_DATE").getTime())
+                    ,rows.getString("IP")
+                    ,rows.getString("REQUEST")
+                    ,rows.getString("STATUS")
+                    ,rows.getString("USER_AGENT"));
+            list.add(line);
+        }
+        return list;
+    }
 
     private String buildQuery(String startDate,String duration,String threshold){
 

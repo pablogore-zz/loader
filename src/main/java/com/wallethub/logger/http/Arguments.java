@@ -11,6 +11,7 @@ public class Arguments{
     private String duration;
     private String threshold;
     private String accessLog;
+    private String ip;
     private boolean clean;
     private boolean help;
 
@@ -62,6 +63,14 @@ public class Arguments{
         this.clean = clean;
     }
 
+    @Option
+    @LongSwitch("ip")
+    @ShortSwitch("i")
+    @SingleArgument
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
     public String getAccessLog() {
         return accessLog;
     }
@@ -76,6 +85,10 @@ public class Arguments{
 
     public String getThreshold() {
         return threshold;
+    }
+
+    public String getIp() {
+        return ip;
     }
 
     public boolean isHelp() {
