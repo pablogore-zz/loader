@@ -1,8 +1,7 @@
-package com.wallethub.logger.http.dao;
+package com.ef.dao;
 
-import com.wallethub.logger.http.dto.Line;
+import com.ef.dto.Line;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface LoaderDAO {

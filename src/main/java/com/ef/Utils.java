@@ -1,4 +1,4 @@
-package com.wallethub.logger.http;
+package com.ef;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

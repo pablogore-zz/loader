@@ -1,6 +1,4 @@
-package com.wallethub.logger.http.command;
-
-import com.wallethub.logger.http.Arguments;
+package com.ef.command;
 
 @FunctionalInterface
 public interface Command {

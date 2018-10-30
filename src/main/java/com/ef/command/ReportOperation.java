@@ -1,8 +1,8 @@
-package com.wallethub.logger.http.command;
+package com.ef.command;
 
-import com.wallethub.logger.http.Arguments;
-import com.wallethub.logger.http.services.Loader;
-import com.wallethub.logger.http.services.MySQLLoaderServiceImpl;
+import com.ef.Arguments;
+import com.ef.services.Loader;
+import com.ef.services.MySQLLoaderServiceImpl;
 
 public class ReportOperation implements Command {
 

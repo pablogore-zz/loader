@@ -1,9 +1,6 @@
-package com.wallethub.logger.http.dto;
-
-import jdk.nashorn.internal.runtime.options.Option;
+package com.ef.dto;
 
 import java.util.Date;
-import java.util.Optional;
 
 public class Line {
     private Date date;
@@ -58,5 +55,16 @@ public class Line {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    @Override
+    public String toString() {
+        return "Line{" +
+                "date=" + date +
+                ", ip='" + ip + '\'' +
+                ", request='" + request + '\'' +
+                ", status='" + status + '\'' +
+                ", userAgent='" + userAgent + '\'' +
+                '}';
     }
 }

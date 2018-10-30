@@ -1,6 +1,6 @@
-package com.wallethub.logger.http;
+package com.ef;
 
-import com.wallethub.logger.http.command.Command;
+import com.ef.command.Command;
 
 public class OperationExecutor {
 

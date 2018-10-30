@@ -1,22 +1,33 @@
-package com.wallethub.logger.http.dao;
+package com.ef.dao;
 
-import com.wallethub.logger.http.Utils;
-import com.wallethub.logger.http.dto.Line;
+import com.ef.Utils;
+import com.ef.dto.Line;
 
 import java.sql.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class LoaderDAOImpl implements LoaderDAO {
 
+    private static Logger logger =
+            Logger.getLogger(LoaderDAOImpl.class);
 
     public LoaderDAOImpl() {
     }
 
     @Override
     public int save(List<Line> lines) throws Exception {
+        logger.info("*************************************");
+        logger.info("load access log into db");
+
+        Instant start = Instant.now();
+
 
         String sql = "insert into access_logger (OP_DATE, IP,REQUEST,STATUS,USER_AGENT) values (?, ?, ?, ?, ?)";
 
@@ -37,7 +48,7 @@ public class LoaderDAOImpl implements LoaderDAO {
 
             if(++countLines % batchSize == 0) {
                 ps.executeBatch();
-                System.out.println("INSERTING ....." + countLines);
+                logger.info(countLines+" INSERTING..."+line);
             }
         }
 
@@ -46,11 +57,21 @@ public class LoaderDAOImpl implements LoaderDAO {
         connection.commit();
         connection.close();
 
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+
+        logger.info("End load file access log " + timeElapsed);
+        logger.info("*************************************");
         return countLines;
     }
 
     @Override
     public void clean() throws Exception {
+        logger.info("*************************************");
+        logger.info("clean tables");
+
+        Instant start = Instant.now();
+
         String sql = "delete from access_logger ";
         String sql1 = "delete from report_logger ";
 
@@ -63,10 +84,19 @@ public class LoaderDAOImpl implements LoaderDAO {
 
         connection.commit();
         connection.close();
+
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+
+        logger.info("clean tables end " + timeElapsed);
+        logger.info("*************************************");
     }
 
     @Override
     public int report(String startDate,String duration,String threshold) throws Exception {
+        logger.info("*************************************");
+        logger.info("clean tables");
+
 
         String sql = this.buildQuery(startDate,duration,threshold);
 
@@ -83,7 +113,9 @@ public class LoaderDAOImpl implements LoaderDAO {
 
     @Override
     public List<Line> report(String ip) throws Exception {
-        String sql = String.format(" SELECT IP ,STATUS ,REQUEST , USER_AGENT FROM access_logger WHERE IP='%s'", ip);
+        String sql = String.format(" SELECT IP ,STATUS ,REQUEST , USER_AGENT , OP_DATE  FROM access_logger WHERE IP='%s'", ip);
+
+        Instant start = Instant.now();
 
         Connection connection = Utils.getConnection();
 
@@ -93,6 +125,8 @@ public class LoaderDAOImpl implements LoaderDAO {
 
         List<Line> list  = new ArrayList<>();
 
+        logger.info("*************************************");
+        logger.info("filter by ip start");
         while (rows.next()){
 
             Line line = new Line(new Date(rows.getTimestamp("OP_DATE").getTime())
@@ -101,7 +135,15 @@ public class LoaderDAOImpl implements LoaderDAO {
                     ,rows.getString("STATUS")
                     ,rows.getString("USER_AGENT"));
             list.add(line);
+            logger.info(line);
         }
+
+
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+
+        logger.info("filter by ip end " + timeElapsed);
+        logger.info("*************************************");
         return list;
     }
 

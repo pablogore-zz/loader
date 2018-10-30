@@ -1,8 +1,6 @@
-package com.wallethub.logger.http.command;
+package com.ef.command;
 
-import com.wallethub.logger.http.Arguments;
-import com.wallethub.logger.http.dao.LoaderDAO;
-import com.wallethub.logger.http.dao.LoaderDAOImpl;
+import com.ef.dao.LoaderDAOImpl;
 
 public class CleanOperation implements Command {
 

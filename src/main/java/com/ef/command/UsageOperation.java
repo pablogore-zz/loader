@@ -1,6 +1,6 @@
-package com.wallethub.logger.http.command;
+package com.ef.command;
 
-import com.wallethub.logger.http.Arguments;
+import com.ef.Arguments;
 
 public class UsageOperation implements Command {
 
