@@ -1,9 +1,12 @@
 package com.ef.command;
 
+/**
+ * Common Command interface.
+ */
 @FunctionalInterface
 public interface Command {
     /**
-     * Command execution method
+     * Execute the current Command.
      */
     void execute();
 }

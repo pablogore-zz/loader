@@ -2,34 +2,60 @@ package com.ef.dao;
 
 import com.ef.Utils;
 import com.ef.dto.Line;
-
-import java.sql.*;
+import org.apache.log4j.Logger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.apache.log4j.Logger;
 
+/**
+ * The loader implementation dao.
+ */
 public class LoaderDAOImpl implements LoaderDAO {
 
+    /**
+     * this is a logger reference.
+     */
     private static Logger logger =
             Logger.getLogger(LoaderDAOImpl.class);
 
+    /**
+     * this is the default constructor.
+     */
     public LoaderDAOImpl() {
     }
 
+
+    /**
+     * Store values into the database.
+     * @param lines
+     *          list of value lines to be perform
+     * @return
+     *      number of rows inserted
+     *
+     * @throws Exception
+     *             throw exception when save list into the database.
+     */
+
     @Override
-    public int save(List<Line> lines) throws Exception {
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public int save(final List<Line> lines) throws Exception {
         logger.info("*************************************");
         logger.info("load access log into db");
 
         Instant start = Instant.now();
 
 
-        String sql = "insert into access_logger (OP_DATE, IP,REQUEST,STATUS,USER_AGENT) values (?, ?, ?, ?, ?)";
+        String sql = "insert into access_logger "
+                + "(OP_DATE, IP,REQUEST,STATUS,USER_AGENT) "
+                + "values (?, ?, ?, ?, ?)";
 
         Connection connection = Utils.getConnection();
 
@@ -39,14 +65,16 @@ public class LoaderDAOImpl implements LoaderDAO {
         final int batchSize = 1000;
 
         for (Line line : lines) {
-            ps.setTimestamp(1, new Timestamp(line.getDate().getTime()));
-            ps.setString(2, line.getIp());
-            ps.setString(3, line.getRequest());
-            ps.setString(4, line.getStatus());
-            ps.setString(5, line.getUserAgent());
+            int row = 1;
+            ps.setTimestamp(row++, new Timestamp(line.getDate().getTime()));
+            ps.setString(row++, line.getIp());
+            ps.setString(row++, line.getRequest());
+            ps.setString(row++, line.getStatus());
+            ps.setString(row++, line.getUserAgent());
+
             ps.addBatch();
 
-            if(++countLines % batchSize == 0) {
+            if (++countLines % batchSize == 0) {
                 ps.executeBatch();
                 logger.info(countLines+" INSERTING..."+line);
             }
@@ -65,6 +93,11 @@ public class LoaderDAOImpl implements LoaderDAO {
         return countLines;
     }
 
+    /**
+    * Clean db.
+    * @throws Exception
+    *          throw exception in clean operation
+    */
     @Override
     public void clean() throws Exception {
         logger.info("*************************************");
@@ -92,13 +125,27 @@ public class LoaderDAOImpl implements LoaderDAO {
         logger.info("*************************************");
     }
 
+    /**
+     * Perform the report counting the request in a certain piriod of time.
+     * @param startDate
+     *          startDate param
+     * @param duration
+     *          duration param
+     * @param threshold
+     *          threshold param
+     * @return
+     *      the number of record
+     * @throws Exception
+     *             throw exception when execute report.
+     */
     @Override
-    public int report(String startDate,String duration,String threshold) throws Exception {
+    public int report(final String startDate, final String duration,
+                      final String threshold) throws Exception {
         logger.info("*************************************");
         logger.info("clean tables");
 
 
-        String sql = this.buildQuery(startDate,duration,threshold);
+        String sql = this.buildQuery(startDate, duration, threshold);
 
         Connection connection = Utils.getConnection();
 
@@ -111,9 +158,23 @@ public class LoaderDAOImpl implements LoaderDAO {
         return rows;
     }
 
+    /**
+     *  Report that filter the result by ip.
+     * @param ip
+     *          the ip to filter
+     * @return  a list of dto Line
+     * @throws Exception
+     *             throw exception when execute report filter by ip
+     */
     @Override
-    public List<Line> report(String ip) throws Exception {
-        String sql = String.format(" SELECT IP ,STATUS ,REQUEST , USER_AGENT , OP_DATE  FROM access_logger WHERE IP='%s'", ip);
+    public List<Line> report(final String ip) throws Exception {
+        String sql = String.format(" SELECT "
+                + "IP "
+                + ",STATUS "
+                + ",REQUEST "
+                + ",USER_AGENT "
+                + ",OP_DATE "
+                + "FROM access_logger WHERE IP='%s'", ip);
 
         Instant start = Instant.now();
 
@@ -127,13 +188,14 @@ public class LoaderDAOImpl implements LoaderDAO {
 
         logger.info("*************************************");
         logger.info("filter by ip start");
-        while (rows.next()){
+        while (rows.next()) {
 
-            Line line = new Line(new Date(rows.getTimestamp("OP_DATE").getTime())
-                    ,rows.getString("IP")
-                    ,rows.getString("REQUEST")
-                    ,rows.getString("STATUS")
-                    ,rows.getString("USER_AGENT"));
+            Line line = new Line(new Date(
+                    rows.getTimestamp("OP_DATE").getTime()),
+                    rows.getString("IP"),
+                    rows.getString("REQUEST"),
+                    rows.getString("STATUS"),
+                    rows.getString("USER_AGENT"));
             list.add(line);
             logger.info(line);
         }
@@ -147,33 +209,68 @@ public class LoaderDAOImpl implements LoaderDAO {
         return list;
     }
 
-    private String buildQuery(String startDate,String duration,String threshold){
+    /**
+     * Build the Sql Query String.
+     * @param startDate
+     *          the startDate
+     * @param duration
+     *          the duration
+     *
+     * @param threshold
+     *          the threshold
+     * @return the sql query
+     */
+    private String buildQuery(final String startDate, final String duration,
+                              final String threshold) {
 
         StringBuffer sb = new StringBuffer();
-        String sql = String.format(sb.append("INSERT INTO report_logger (IP,STATUS,REQUEST,USER_AGENT,TOTAL)")
-                .append(" SELECT distinct(IP),STATUS,REQUEST,USER_AGENT,count(*) as TOTAL ")
-                .append(" FROM access_logger WHERE  `OP_DATE` BETWEEN '%s' and '%s' ")
-                .append(" GROUP BY IP,STATUS,REQUEST,USER_AGENT HAVING TOTAL> %s;")
-                .toString(), startDate,nextTo(startDate,duration),threshold);
+        String sql = String.format(sb.append("INSERT INTO report_logger ("
+                + "IP "
+                + ",STATUS "
+                + ",REQUEST "
+                + ",USER_AGENT "
+                + ",TOTAL)"
+                )
+                .append(" SELECT "
+                        + "distinct(IP) "
+                        + ",STATUS "
+                        + ",REQUEST "
+                        + ",USER_AGENT "
+                        + ",count(*) as TOTAL "
+                )
+                .append(" FROM access_logger WHERE  "
+                        + "`OP_DATE` BETWEEN "
+                        + "'%s' and '%s' ")
+                .append(" GROUP BY "
+                        + "IP "
+                        + ",STATUS "
+                        + ",REQUEST "
+                        + ",USER_AGENT HAVING TOTAL> %s;")
+                .toString(), startDate,
+                nextTo(startDate, duration), threshold);
 
     return  sql;
 
 
     }
 
-    public static void main(String args[]) throws Exception {
-        System.out.println(
-                new LoaderDAOImpl().buildQuery("2017-01-01.13:00:00","hourly","100"));
-    }
-
-
-
-    private String nextTo(String date , String duration ){
-        if ("hourly".equals(duration)){
+    /**
+     * Get the next day depending of the duration type.
+     * @param date
+     *          the date
+     * @param duration
+     *          the duration
+     *
+     * @return
+     *          the String representation of the next day
+     *          to be used in the query.
+     */
+    private String nextTo(final String date, final String duration) {
+        if ("hourly".equals(duration)) {
             return Utils.getDatToString(nextHour(date));
         }
 
-        if ("daily".equals(duration)){
+        if ("daily".equals(duration)) {
             return Utils.getDatToString(next24Hours(date));
 
         }
@@ -181,7 +278,13 @@ public class LoaderDAOImpl implements LoaderDAO {
         return null;
     }
 
-    private Date next24Hours(String date) {
+    /**
+     * retuen the next 24 hours form the current date.
+     * @param date
+     *          the date
+     * @return  a Date
+     */
+    private Date next24Hours(final String date) {
         Date current  = Utils.getDate(date);
 
         Calendar cal = Calendar.getInstance(); // creates calendar
@@ -191,7 +294,13 @@ public class LoaderDAOImpl implements LoaderDAO {
         return cal.getTime(); //
     }
 
-    private Date nextHour(String date){
+    /**
+     * Get the next hour of certain Date.
+     * @param date
+     *          the date
+     * @return a Date
+     */
+    private Date nextHour(final String date) {
 
         Date current  = Utils.getDate(date);
 

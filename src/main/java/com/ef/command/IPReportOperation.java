@@ -4,15 +4,28 @@ import com.ef.Arguments;
 import com.ef.services.Loader;
 import com.ef.services.MySQLLoaderServiceImpl;
 
+/**
+ * This class execute a Command for filter report by ip.
+ */
 public class IPReportOperation implements Command {
 
+    /**
+     * hold the program arguments.
+     */
     private final Arguments arguments;
 
-    public IPReportOperation(Arguments arguments) {
+    /**
+     * Contructor with Arguments parameter.
+     * @param arguments
+     *          the arguments programs
+     */
+    public IPReportOperation(final Arguments arguments) {
         this.arguments = arguments;
     }
 
-
+    /**
+     * Execute the current Command.
+     */
     @Override
     public void execute() {
 

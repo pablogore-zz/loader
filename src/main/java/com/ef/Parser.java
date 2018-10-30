@@ -1,17 +1,32 @@
 package com.ef;
 
+import com.ef.command.CleanOperation;
+import com.ef.command.Command;
+import com.ef.command.IPReportOperation;
+import com.ef.command.ReportOperation;
+import com.ef.command.SaveOperation;
+import com.ef.command.UsageOperation;
 import com.github.jankroken.commandline.CommandLineParser;
 import com.github.jankroken.commandline.OptionStyle;
-import com.ef.command.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 
 /**
- * This is the Entry Point of the log processor
+ * This is the Entry Point of the log processor.
  */
-public class Parser {
+public final class Parser {
 
-    public static final void main(String[] args) throws Exception {
+    /**
+     * Hidden default contructor.
+     */
+    private Parser() {
+    }
+
+    /**
+     * Entry point method.
+     *
+     * @param args argument to be read
+     * @throws Exception The exception to be trhow
+     */
+    public static void main(final String[] args) throws Exception {
 
 
         Arguments options = CommandLineParser.parse(Arguments.class, args,
@@ -28,7 +43,8 @@ public class Parser {
         } else if (options.getAccessLog() != null) {
             Command command = new SaveOperation(options);
             command.execute();
-        } else if (options.getStartDate() != null && options.getDuration() != null
+        } else if (options.getStartDate() != null
+                && options.getDuration() != null
                 && options.getThreshold() != null) {
 
             Command command = new ReportOperation(options);

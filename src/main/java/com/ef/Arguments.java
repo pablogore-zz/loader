@@ -1,119 +1,203 @@
 package com.ef;
 
-import com.github.jankroken.commandline.annotations.*;
+import com.github.jankroken.commandline.annotations.LongSwitch;
+import com.github.jankroken.commandline.annotations.Option;
+import com.github.jankroken.commandline.annotations.ShortSwitch;
+import com.github.jankroken.commandline.annotations.SingleArgument;
+import com.github.jankroken.commandline.annotations.Toggle;
 
 /**
  * This class handle the argument to be pass to process the log file.
  */
-
-public class Arguments{
+public final  class Arguments {
+    /**
+     * The startDate report.
+     */
     private String startDate;
+    /**
+     * Duration type should be hourly o daily.
+     */
     private String duration;
+    /**
+     * The threshold report.
+     */
     private String threshold;
+    /**
+     * The access log file to be import.
+     */
     private String accessLog;
+    /**
+     * The ip tp be filter.
+     */
     private String ip;
+    /**
+     * Flag to clean the tables.
+     */
     private boolean clean;
+    /**
+     * Flag to show the usage menu.
+     */
     private boolean help;
 
+    /**
+     * Set the help value to show usage or no.
+     * @param help  this help
+     */
     @Option
     @LongSwitch("help")
     @ShortSwitch("h")
     @Toggle(true)
-    public void setHelp(boolean help) {
+    public void setHelp(final boolean help) {
         this.help = help;
     }
 
+    /**
+     * set access log file value.
+     * @param  accessLog this is the accessLog file path
+     */
     @Option
     @LongSwitch("accesslog")
     @ShortSwitch("a")
     @SingleArgument
-    public void setAccessLog(String accessLog) {
+    public void setAccessLog(final String accessLog) {
         this.accessLog = accessLog;
     }
 
+    /**
+     *  set startDate report.
+     * @param startDate
+     *              this is the startDate
+     */
     @Option
     @LongSwitch("startDate")
     @ShortSwitch("s")
     @SingleArgument
-    public void setStartDate(String startDate) {
+    public void setStartDate(final String startDate) {
         this.startDate = startDate;
     }
 
+    /**
+     * set duration type.
+     * @param duration
+     *              this is the duration type
+     */
     @Option
     @LongSwitch("duration")
     @ShortSwitch("d")
     @SingleArgument
-    public void setDuration(String duration) {
+    public void setDuration(final String duration) {
         this.duration = duration;
     }
 
+    /**
+     * set threshold for report.
+     * @param threshold
+     *              this is the threshold for report
+     */
     @Option
     @LongSwitch("threshold")
     @ShortSwitch("t")
     @SingleArgument
-    public void setThreshold(String threshold) {
+    public void setThreshold(final String threshold) {
         this.threshold = threshold;
     }
 
+    /**
+     * set the clean flag.
+     * @param clean
+     *          This is the clean flag
+     */
     @Option
     @LongSwitch("clean")
     @ShortSwitch("c")
     @Toggle(true)
-    public void setClean(boolean clean) {
+    public void setClean(final boolean clean) {
         this.clean = clean;
     }
 
+    /**
+     * set the ip for filter report.
+     * @param ip
+     *          thi is the ip for filter report
+     */
     @Option
     @LongSwitch("ip")
     @ShortSwitch("i")
     @SingleArgument
-    public void setIp(String ip) {
+    public void setIp(final String ip) {
         this.ip = ip;
     }
 
+    /**
+     * Get the acces log file.
+     * @return
+     *  the acces log file
+     */
     public String getAccessLog() {
         return accessLog;
     }
 
+    /**
+     * Get Start Date.
+     * @return startDate
+     *
+     */
     public String getStartDate() {
         return startDate;
     }
 
+    /**
+     * Get duration type.
+     * @return duration
+     */
     public String getDuration() {
         return duration;
     }
 
+    /**
+     * Get threshold for report.
+     * @return threshold
+     */
     public String getThreshold() {
         return threshold;
     }
 
+    /**
+     * Get ip for filter report.
+     * @return ip
+     */
     public String getIp() {
         return ip;
     }
 
+    /**
+     * Get usage  string.
+     * @return help
+     */
     public boolean isHelp() {
         return help;
     }
 
+    /**
+     * Get clean db flag.
+     * @return help
+     */
     public boolean isClean() {
         return clean;
     }
 
+    /**
+     * Get string usage menu.
+     */
     public void usage() {
-        System.out.println("\n" +
-                "We have four operation that we could perform\n"+
-                "Load accesslog into mysql  -> java -jar  <jarName> --accesslog <logfile/path/>\n"+
-                "clean tables               -> java -jar <jarName>  --clean \n"+
-                "filter by ip               -> java -jar <jarName>  --ip <ip value>\n"+
-                "startDate|durration|threshold   -> java -jar <jarName> --startDate=2017-01-01.00:00:00 --duration=daily  --threshold=500\n"+
-                "startDate|durration|threshold   -> java -jar <jarName> --startDate=2017-01-01.00:00:00 --duration=hourly --threshold=500\n"+
-                "\n\n"+
-                "\t-a --accesslog \t\t accesslog file\n" +
-                "\t-s --startDate \t\t start date under analysis\n" +
-                "\t-d --duration \t\t duration to be included, optional, dayly | hourly\n" +
-                "\t-t --threshold \t\t threshold value\n" +
-                "\t-i --ip \t\t\t ip for filter\n" +
-                "\t-c --clean \t\t\t clean tables for MySQL\n" +
-                "\n\n");
+        System.out.println("\n"
+          + "\n\n"
+          + "\t-a --accesslog \t\t accesslog file\n"
+          + "\t-s --startDate \t\t start date under analysis\n"
+          + "\t-d --duration \t\t duration daily | hourly\n"
+          + "\t-t --threshold \t\t threshold value\n"
+          + "\t-i --ip \t\t\t ip for filter\n"
+          + "\t-c --clean \t\t\t clean tables for MySQL\n"
+          + "\n\n");
     }
 }

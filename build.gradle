@@ -9,6 +9,10 @@ plugins{
     id "org.flywaydb.flyway" version "5.2.1"
 }
 
+apply plugin: 'checkstyle'
+
+
+defaultTasks 'clean', 'compileJava', 'test', 'checkstyleMain', 'fatjar'
 
 group 'com.wallethub'
 version '1.0-SNAPSHOT'
@@ -19,6 +23,11 @@ repositories {
     mavenCentral()
 }
 
+
+checkstyle {
+    toolVersion "7.6.1"
+    ignoreFailures = true
+}
 
 flyway {
     url = 'jdbc:mysql://localhost:3306'
