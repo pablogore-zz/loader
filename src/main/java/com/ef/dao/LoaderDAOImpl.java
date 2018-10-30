@@ -21,6 +21,11 @@ import java.util.List;
 public class LoaderDAOImpl implements LoaderDAO {
 
     /**
+     * Constant for piriod of time.
+     */
+    private static final int PIRIOD_OF_TIME = 24;
+
+    /**
      * this is a logger reference.
      */
     private static Logger logger =
@@ -76,7 +81,7 @@ public class LoaderDAOImpl implements LoaderDAO {
 
             if (++countLines % batchSize == 0) {
                 ps.executeBatch();
-                logger.info(countLines+" INSERTING..."+line);
+                logger.info(countLines + " INSERTING..." + line);
             }
         }
 
@@ -271,7 +276,7 @@ public class LoaderDAOImpl implements LoaderDAO {
         }
 
         if ("daily".equals(duration)) {
-            return Utils.getDatToString(next24Hours(date));
+            return Utils.getDatToString(nextDay(date));
 
         }
 
@@ -279,19 +284,19 @@ public class LoaderDAOImpl implements LoaderDAO {
     }
 
     /**
-     * retuen the next 24 hours form the current date.
+     * retuen the next  day form the current date.
      * @param date
      *          the date
      * @return  a Date
      */
-    private Date next24Hours(final String date) {
-        Date current  = Utils.getDate(date);
+    private Date nextDay(final String date) {
+        Date current = Utils.getDate(date);
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(current); // sets calendar time/date
-        cal.add(Calendar.HOUR_OF_DAY, 24); // adds one hour
+        cal.add(Calendar.HOUR_OF_DAY, PIRIOD_OF_TIME); // adds one hour
 
-        return cal.getTime(); //
+        return cal.getTime();
     }
 
     /**
