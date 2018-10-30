@@ -28,11 +28,11 @@ public final class Utils {
      */
 
     public static Date getDate(final String str) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss",
+        SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss",
                 Locale.ENGLISH);
-        formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+        simple.setTimeZone(TimeZone.getTimeZone("America/New_York"));
         try {
-            return formatter.parse(str);
+            return simple.parse(str);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -48,8 +48,7 @@ public final class Utils {
      */
     public static Date getDateSSS(final String str) {
         SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS",
-                Locale.ENGLISH);
+                "yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
         formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
         try {
             return formatter.parse(str);

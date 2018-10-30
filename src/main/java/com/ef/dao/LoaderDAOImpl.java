@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -21,9 +22,9 @@ import java.util.List;
 public class LoaderDAOImpl implements LoaderDAO {
 
     /**
-     * Constant for piriod of time.
+     * Constant for period of time.
      */
-    private static final int PIRIOD_OF_TIME = 24;
+    private static final int PERIOD_OF_TIME = 24;
 
     /**
      * this is a logger reference.
@@ -55,7 +56,7 @@ public class LoaderDAOImpl implements LoaderDAO {
         logger.info("*************************************");
         logger.info("load access log into db");
 
-        Instant start = Instant.now();
+        Instant startTx = Instant.now();
 
 
         String sql = "insert into access_logger "
@@ -85,13 +86,13 @@ public class LoaderDAOImpl implements LoaderDAO {
             }
         }
 
-        ps.executeBatch(); // insert remaining records
+        ps.executeBatch();
         ps.close();
-        connection.commit();
-        connection.close();
 
-        Instant finish = Instant.now();
-        long timeElapsed = Duration.between(start, finish).toMillis();
+        commit(connection);
+
+        Instant finishTx = Instant.now();
+        long timeElapsed = Duration.between(startTx, finishTx).toMillis();
 
         logger.info("End load file access log " + timeElapsed);
         logger.info("*************************************");
@@ -120,8 +121,7 @@ public class LoaderDAOImpl implements LoaderDAO {
         stmt.executeUpdate(sql);
         stmt.executeUpdate(sql1);
 
-        connection.commit();
-        connection.close();
+        commit(connection);
 
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
@@ -158,8 +158,7 @@ public class LoaderDAOImpl implements LoaderDAO {
 
         int rows = stmt.executeUpdate(sql);
 
-        connection.commit();
-        connection.close();
+        commit(connection);
         return rows;
     }
 
@@ -272,11 +271,11 @@ public class LoaderDAOImpl implements LoaderDAO {
      */
     private String nextTo(final String date, final String duration) {
         if ("hourly".equals(duration)) {
-            return Utils.getDatToString(nextHour(date));
+            return Utils.getDatToString(next(date, 1));
         }
 
         if ("daily".equals(duration)) {
-            return Utils.getDatToString(nextDay(date));
+            return Utils.getDatToString(next(date, PERIOD_OF_TIME));
 
         }
 
@@ -287,32 +286,27 @@ public class LoaderDAOImpl implements LoaderDAO {
      * retuen the next  day form the current date.
      * @param date
      *          the date
+     * @param  move
+     *          move time
      * @return  a Date
      */
-    private Date nextDay(final String date) {
+    private Date next(final String date, final int move){
         Date current = Utils.getDate(date);
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(current); // sets calendar time/date
-        cal.add(Calendar.HOUR_OF_DAY, PIRIOD_OF_TIME); // adds one hour
-
+        cal.add(Calendar.HOUR_OF_DAY, move); // adds one hour
         return cal.getTime();
     }
 
     /**
-     * Get the next hour of certain Date.
-     * @param date
-     *          the date
-     * @return a Date
+     * Commit transaction.
+     * @param conn the connection
+     * @throws  SQLException throw
      */
-    private Date nextHour(final String date) {
+    private void commit(final Connection conn) throws SQLException {
+        conn.commit();
+        conn.close();
 
-        Date current  = Utils.getDate(date);
-
-        Calendar cal = Calendar.getInstance(); // creates calendar
-        cal.setTime(current); // sets calendar time/date
-        cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
-
-        return cal.getTime();
     }
 }
