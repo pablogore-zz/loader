@@ -88,5 +88,21 @@ public final class Utils {
         conn.setAutoCommit(false);
         return conn;
     }
+
+    /**
+     * helper method to verify is a value is null or empty.
+     * @param str
+     *          the str param
+     * @return
+     *      true is the value is empty or null otherwise false
+     */
+    public static boolean isNullorEmpty(final String str){
+        if (str == null) {
+            return true;
+        }else if (str.length() == 0) {
+            return true;
+        }
+        return false;
+    }
 }
 

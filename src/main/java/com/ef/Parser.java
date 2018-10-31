@@ -32,7 +32,6 @@ public final class Parser {
         Arguments options = CommandLineParser.parse(Arguments.class, args,
                 OptionStyle.LONG_OR_COMPACT);
 
-        OperationExecutor executor = new OperationExecutor();
         if (options.isHelp()) {
             Command command = new UsageOperation(options);
             command.execute();
@@ -40,23 +39,16 @@ public final class Parser {
         } else if (options.isClean()) {
             CleanOperation clean = new CleanOperation();
             clean.execute();
-        } else if (options.getAccessLog() != null) {
-            Command command = new SaveOperation(options);
-            command.execute();
-        } else if (options.getStartDate() != null
-                && options.getDuration() != null
-                && options.getThreshold() != null) {
-
-            Command command = new ReportOperation(options);
-            command.execute();
-        } else if (options.getIp() != null) {
-            Command command = new IPReportOperation(options);
-            command.execute();
+        } else if (!Utils.isNullorEmpty(options.getAccessLog())) {
+            new SaveOperation(options).execute();
+        } else if (!Utils.isNullorEmpty(options.getStartDate())
+                && !Utils.isNullorEmpty(options.getDuration())
+                && !Utils.isNullorEmpty(options.getThreshold())) {
+            new ReportOperation(options).execute();
+        } else if (!Utils.isNullorEmpty(options.getIp())) {
+            new IPReportOperation(options).execute();
         } else {
-            Command command = new UsageOperation(options);
-            command.execute();
-            return;
+            new UsageOperation(options).execute();
         }
     }
-
 }
