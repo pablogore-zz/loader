@@ -1,11 +1,14 @@
 package com.ef;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.TimeZone;
 
 /**
@@ -81,10 +84,12 @@ public final class Utils {
      *          exception throw
      */
     public static Connection getConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
-        String connection = "jdbc:mysql://localhost:3306/loaderdb";
+        Properties properties = configurationParser();
+        Class.forName(properties.getProperty("driver"));
+        String connection = properties.getProperty("url");
         Connection conn = DriverManager.getConnection(connection,
-                "loader", "loader");
+                properties.getProperty("dbuser"),
+                properties.getProperty("dbpassword"));
         conn.setAutoCommit(false);
         return conn;
     }
@@ -103,6 +108,23 @@ public final class Utils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Helper method for read the configuration file config.properties .
+     * @return the Properties
+     * @throws Exception throw exception if the file does not exist.
+     *
+     */
+    public static Properties configurationParser() throws Exception {
+        Properties prop = new Properties();
+        InputStream input = null;
+        input = new FileInputStream("config.properties");
+        // load a properties file
+        prop.load(input);
+
+        return prop;
+
     }
 }
 

@@ -28,7 +28,7 @@ public final class Parser {
      */
     public static void main(final String[] args) throws Exception {
 
-
+        Utils.configurationParser();
         Arguments options = CommandLineParser.parse(Arguments.class, args,
                 OptionStyle.LONG_OR_COMPACT);
 

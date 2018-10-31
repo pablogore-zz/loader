@@ -10,6 +10,9 @@ plugins{
 
 }
 
+def props = new Properties()
+file("config.properties").withInputStream { props.load(it) }
+
 apply plugin: 'checkstyle'
 
 
@@ -38,10 +41,9 @@ test {
 }
 
 flyway {
-    url = 'jdbc:mysql://localhost:3306'
-    user = 'loader'
-    password = 'loader'
-    schemas = ['loaderdb']
+    url = props.getProperty("url")
+    user = props.getProperty("dbuser")
+    password = props.getProperty("dbpassword")
 }
 
 task fatJar(type: Jar) {
@@ -54,6 +56,13 @@ task fatJar(type: Jar) {
     }
 }
 
+task copyJarToBin(type:Copy,dependsOn:[fatJar]) {
+    copy {
+        from "${buildDir}/libs/" + project.name + "-all" + "-" + version + ".jar"
+        from "${project.rootDir}/config.properties"
+        into "${project.rootDir}/work"
+    }
+}
 dependencies {
     compile  group: 'com.github.jankroken',name:'commandline',version:'1.7.0'
     compile  group: 'mysql', name: 'mysql-connector-java', version: '8.0.13'
@@ -63,6 +72,9 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+task loaderDist(){
+
+}
 
 task pmd (dependsOn: compileJava) {
     doLast {
